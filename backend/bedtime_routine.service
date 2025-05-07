@@ -1,0 +1,17 @@
+[Unit]
+Description=Bedtime Routine Service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/bedtime_routine
+ExecStart=/usr/bin/python3 /home/pi/bedtime_routine/main.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=bedtime_routine
+
+[Install]
+WantedBy=multi-user.target
