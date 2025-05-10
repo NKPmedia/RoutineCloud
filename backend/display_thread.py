@@ -3,12 +3,24 @@ display_thread.py
 
 This module provides a thread for displaying the current task and playing sounds using pygame.
 """
+import pyrootutils
+
+root = pyrootutils.setup_root(
+    search_from=__file__,
+    indicator=["pyproject.toml", ".git"],
+    pythonpath=True,
+    cwd=True
+)
+
+
 
 import threading
 import time
 import os
 import pygame
 from typing import Optional, Tuple
+import colors
+from pygame.display import is_fullscreen
 
 from routine_state import routine_state
 
@@ -19,7 +31,7 @@ class DisplayThread(threading.Thread):
     
     def __init__(self, 
                  sound_dir: str = "sounds",
-                 screen_size: Tuple[int, int] = (800, 480),  # Common Raspberry Pi display size
+                 screen_size: Tuple[int, int] = (1024, 600),  # Common Raspberry Pi display size
                  fps: int = 30):
         """
         Initialize the display thread.
@@ -51,11 +63,6 @@ class DisplayThread(threading.Thread):
         self.title_font = pygame.font.Font(None, 72)
         self.task_font = pygame.font.Font(None, 48)
         
-        # Colors
-        self.background_color = (0, 0, 0)   # Black
-        self.text_color = (255, 255, 255)   # White
-        self.highlight_color = (0, 255, 0)  # Green
-        
         # Clock for controlling frame rate
         self.clock = pygame.time.Clock()
     
@@ -68,9 +75,10 @@ class DisplayThread(threading.Thread):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                self._handle_full_screen_toggle(event, screen=self.screen)
             
             # Clear the screen
-            self.screen.fill(self.background_color)
+            self.screen.fill(colors.BACKGROUND)
             
             # Get the current state
             is_active = routine_state.is_routine_active
@@ -79,20 +87,20 @@ class DisplayThread(threading.Thread):
             
             # Draw the title
             title_text = "Bedtime Routine"
-            title_surface = self.title_font.render(title_text, True, self.text_color)
+            title_surface = self.title_font.render(title_text, True, colors.TEXT_LIGHT_BEIGE)
             title_rect = title_surface.get_rect(center=(self.screen_size[0] // 2, 50))
             self.screen.blit(title_surface, title_rect)
             
             # Draw the current task if active
             if is_active and current_task:
                 task_text = f"Current Task: {current_task['name']}"
-                task_surface = self.task_font.render(task_text, True, self.highlight_color)
+                task_surface = self.task_font.render(task_text, True, colors.TEXT_LIGHT_BEIGE)
                 task_rect = task_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2))
                 self.screen.blit(task_surface, task_rect)
             else:
                 # Draw inactive message
                 inactive_text = "No Active Routine"
-                inactive_surface = self.task_font.render(inactive_text, True, self.text_color)
+                inactive_surface = self.task_font.render(inactive_text, True, colors.TEXT_LIGHT_BEIGE)
                 inactive_rect = inactive_surface.get_rect(center=(self.screen_size[0] // 2, self.screen_size[1] // 2))
                 self.screen.blit(inactive_surface, inactive_rect)
             
@@ -146,9 +154,19 @@ class DisplayThread(threading.Thread):
         """Stop the display thread."""
         self.running = False
 
+    def _handle_full_screen_toggle(self, event, screen, key=pygame.K_F11):
+        if event.type == pygame.KEYDOWN and event.key == key:
+            is_fullscreen = screen.get_flags() & pygame.FULLSCREEN
+            if is_fullscreen:
+                screen = pygame.display.set_mode(self.screen_size)
+            else:
+                screen = pygame.display.set_mode(self.screen_size, pygame.FULLSCREEN)
+        return screen
+
+
 # Function to start the display thread
 def start_display_thread(sound_dir: str = "sounds", 
-                         screen_size: Tuple[int, int] = (800, 480),
+                         screen_size: Tuple[int, int] = (1024, 600),
                          fps: int = 30) -> DisplayThread:
     """
     Start the display thread.

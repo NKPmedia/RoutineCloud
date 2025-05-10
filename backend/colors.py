@@ -1,0 +1,23 @@
+# Backgrounds
+BACKGROUND_DARK_BLUE = (10, 10, 50)
+BACKGROUND_LIGHT_BLUE = (30, 30, 80)
+BACKGROUND = BACKGROUND_LIGHT_BLUE
+# Text
+TEXT_WHITE = (255, 255, 255)
+TEXT_LIGHT_BEIGE = (245, 245, 220)
+
+# Progress Bar
+PROGRESS_BAR_FILL = (255, 215, 0)  # Gold
+PROGRESS_BAR_BACKGROUND = (50, 50, 50)
+
+# Icons
+ICON_DEFAULT_COLOR = (255, 255, 255)  # White
+
+# Task Highlight
+TASK_HIGHLIGHT_COLOR = (255, 165, 0)  # Orange
+
+# Completed Task Icons
+COMPLETED_ICON_COLOR = (0, 255, 0)  # Green
+
+# Error / Alert
+ALERT_RED = (255, 0, 0)
