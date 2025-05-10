@@ -1,0 +1,22 @@
+[project]
+name = "routinecloud-backend"
+version = "0.1.0"
+description = "FastAPI backend for Raspberry Pi controlling a bedtime routine"
+authors = [{ name = "Paul Kruse", email = "paul.kruse@posteo.de" }]
+requires-python = ">=3.8"
+
+dependencies = [
+    "fastapi>=0.68.0",
+    "uvicorn>=0.15.0",
+    "pygame>=2.0.1",
+    "websockets>=10.0",
+    "pydantic>=1.8.2",
+    "requests>=2.26.0",  # For test_api.py
+    "sqlalchemy>=1.4.0",
+    "alembic>=1.7.0",
+    "pyrootutils",
+    "cairosvg"
+]
+
+[tool.uv]
+# Additional uv config options can be added here if needed
