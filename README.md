@@ -64,7 +64,7 @@ See the [backend README](backend/README.md) for detailed setup instructions.
 Quick start:
 ```bash
 cd backend
-pip install -r requirements.txt
+pip install -r pyproject.toml
 python main.py
 ```
 
